@@ -274,6 +274,7 @@ function getContent(node, allowIdentifier = false) {
       return node.value.replace(NON_ALPHANUMERIC_OR_UNDERSCORE_REGEX, "");
     case "MemberExpression":
       // styles.a or enum constants
+      // TODO: make this a custom option instead of hardcoding
       return "name" in node.object &&
         node.object.name &&
         (node.object.name === STYLES ||
@@ -300,7 +301,7 @@ function getContent(node, allowIdentifier = false) {
     case "CallExpression":
       // cx(styles.a, styles.b)
       return getContentStringForArray(node.arguments);
-    case "ConditionalExpression":
+    case "ConditionalExpression": //tested
       return getContentStringForArray([node.consequent, node.alternate]);
     case "LogicalExpression":
     case "BinaryExpression":
