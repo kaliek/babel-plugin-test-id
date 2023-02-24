@@ -301,7 +301,7 @@ function getContent(node, allowIdentifier = false) {
     case "CallExpression":
       // cx(styles.a, styles.b)
       return getContentStringForArray(node.arguments);
-    case "ConditionalExpression": //tested
+    case "ConditionalExpression":
       return getContentStringForArray([node.consequent, node.alternate]);
     case "LogicalExpression":
     case "BinaryExpression":
