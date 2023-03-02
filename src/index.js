@@ -5,16 +5,6 @@ const CLASSNAME = "className";
 const STYLES = "styles";
 const INTERNAL_ID = "_internal_id";
 const REACT_FRAGMENT = "React.Fragment";
-const ID_ATTRIBUTE_KEY_LIST = [
-  "title",
-  "label",
-  "placeholder",
-  "description",
-  "header",
-  "name",
-  "field",
-  "type",
-];
 const CAPITALISED_REGEX = /^[A-Z]/g;
 const NON_ALPHANUMERIC_OR_UNDERSCORE_REGEX = /[^a-zA-Z0-9_]/g; // i18n keys contain _
 const isCapitalised = (str) => str.match(CAPITALISED_REGEX) !== null;
@@ -37,6 +27,16 @@ export default function (
     idAttributeKey = "data-id",
     componentAttributeKey = "data-component",
     classnameAttributeKey = "data-classname",
+    idAttributeList = [
+      "title",
+      "label",
+      "placeholder",
+      "description",
+      "header",
+      "name",
+      "field",
+      "type",
+    ],
     delimiter = "-",
   }
 ) {
@@ -66,7 +66,7 @@ export default function (
                 !("expression" in a.value) ||
                 !("name" in a.value.expression) ||
                 a.name.name !== a.value.expression.name) && // Ignore not meaningful cases e.g. description={description}
-              ID_ATTRIBUTE_KEY_LIST.some(
+              idAttributeList.some(
                 (id) =>
                   typeof a.name.name === "string" &&
                   a.name.name.toLowerCase().includes(id) // As long as it's similar to any of the ID_ATTRIBUTE_KEY_LIST
