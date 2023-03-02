@@ -1,8 +1,8 @@
 const Foo = ({ isLoading }) => {
-    return isLoading ? <div data-bd-fe-id="Loading">Loading</div> : (
+    return isLoading ? <div data-id="Loading">Loading</div> : (
         <div>
-            <div data-bd-fe-id="Hi">Hi</div>
-            <div data-bd-fe-id="Hello">Hello</div>
+            <div data-id="Hi">Hi</div>
+            <div data-id="Hello">Hello</div>
         </div>
     )
 };

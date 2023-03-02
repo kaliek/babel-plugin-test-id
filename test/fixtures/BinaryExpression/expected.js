@@ -1,6 +1,6 @@
 function Foo(a,b) {
-    return <div data-bd-fe-component="Foo" data-bd-fe-id={_bd_fe_testid}>{a + b}</div>
-    var _bd_fe_testid = a?._bd_fe_testid;
+    return <div data-component="Foo" data-id={_internal_id}>{a + b}</div>
+    var _internal_id = a?._internal_id;
 }
 
 const Foo2 = (a,b) => {
