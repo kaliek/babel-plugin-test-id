@@ -1,4 +1,4 @@
 const Bar = () => 
-    <div className={cx(styles.a, styles.b)} data-bd-fe-id="Hi" data-bd-fe-classname="a-b">
+    <div className={cx(styles.a, styles.b)} data-id="Hi" data-classname="a-b">
         Hi
     </div>

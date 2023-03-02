@@ -3,7 +3,7 @@ import * as t from "@babel/types";
 const INTERNAL_PARAM = "_internal_param";
 const CLASSNAME = "className";
 const STYLES = "styles";
-const INTERNAL_ID = "_internal_testid";
+const INTERNAL_ID = "_internal_id";
 const REACT_FRAGMENT = "React.Fragment";
 const ID_ATTRIBUTE_KEY_LIST = [
   "title",

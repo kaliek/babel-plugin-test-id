@@ -1,6 +1,6 @@
 function Foo() {
-    return <div data-bd-fe-component="Foo" data-bd-fe-id={_bd_fe_testid}>{true && false}</div>
-    var _bd_fe_testid = _bd_fe_param?._bd_fe_testid;
+    return <div data-component="Foo" data-id={_internal_id}>{true && false}</div>
+    var _internal_id = _internal_param?._internal_id;
 };
 
 const Foo2 = () => {

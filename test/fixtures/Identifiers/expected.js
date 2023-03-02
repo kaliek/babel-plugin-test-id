@@ -1,9 +1,9 @@
 //Identifier
 function MyComponent(props) {
   return (
-    <div data-bd-fe-component="MyComponent" data-bd-fe-id={_bd_fe_testid}>{props}</div>
+    <div data-component="MyComponent" data-id={_internal_id}>{props}</div>
   );
-  var _bd_fe_testid = props?._bd_fe_testid;
+  var _internal_id = props?._internal_id;
 }
 const MyComponent2 = (props) => {
   return <div>{props}</div>;

@@ -1,1 +1,1 @@
-const Bar = () => <div data-bd-fe-id="Hi">Hi</div>;
+const Bar = () => <div data-id="Hi">Hi</div>;
