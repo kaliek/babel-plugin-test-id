@@ -57,6 +57,7 @@ in .babelrc
 | idAttributeKey | string | `data-id` | Unique information extracted from the attributes and content of the element |
 | componentAttributeKey | string | `data-component` | React component name if any |
 | classnameAttributeKey | string | `data-classname` | css classnames before uglified |
+| idAttributeList | string[] | `["title", "label", "placeholder", "description", "header", "name", "field", "type",]` | Extract unique strings from these attributes to construct the value for 'idAttributeKey' |
 | delimiter | string | `-` | Join multiple extracted strings |
 
 in .babelrc
