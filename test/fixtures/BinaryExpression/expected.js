@@ -4,5 +4,6 @@ function Foo(a,b) {
 }
 
 const Foo2 = (a,b) => {
-    return <div>{a + b}</div>
+    return <div  data-component="Foo2" data-id={_internal_id}>{a + b}</div>
+    var _internal_id = a?._internal_id;
 }
