@@ -5,8 +5,8 @@ const CLASSNAME = "className";
 const STYLES = "styles";
 const INTERNAL_ID = "_internal_id";
 const REACT_FRAGMENT = "React.Fragment";
+const NON_ALPHANUMERIC_OR_UNDERSCORE_REGEX = /[^a-zA-Z0-9_]/g;
 const CAPITALISED_REGEX = /^[A-Z]/g;
-const NON_ALPHANUMERIC_OR_UNDERSCORE_REGEX = /[^a-zA-Z0-9_]/g; // i18n keys contain _
 const isCapitalised = (str) => str.match(CAPITALISED_REGEX) !== null;
 
 /**
@@ -37,9 +37,11 @@ export default function (
       "field",
       "type",
     ],
+    idAttributeValueString =  "/^[A-Z]/g",
     delimiter = "-",
   }
 ) {
+  const idAttributeValuePattern = stringToRegex(idAttributeValueString);
   return {
     visitor: {
       JSXElement(path) {
@@ -75,7 +77,7 @@ export default function (
         ];
 
         const newTestIdValue = getContentForArray(idNodes, delimiter)
-          .filter(isCapitalised) // The value should be a capitalised string, i.e. i18n key
+          .filter(v => isMatched(v, idAttributeValuePattern))
           .join(delimiter);
         if (newTestIdValue.length > 0) {
           attributes.push(createAttributeLiteral(testId, newTestIdValue));
@@ -118,6 +120,7 @@ export default function (
           addComponentAttribute(
             returnStatement?.argument,
             idAttributeKey,
+            idAttributeValuePattern,
             componentAttributeKey,
             delimiter,
             functionName,
@@ -144,6 +147,7 @@ export default function (
             addComponentAttribute(
               returnStatement?.argument,
               idAttributeKey,
+              idAttributeValuePattern,
               componentAttributeKey,
               delimiter,
               variableName,
@@ -155,6 +159,21 @@ export default function (
       },
     },
   };
+}
+
+function stringToRegex(str){
+  // Main regex
+  const main = str.match(/\/(.+)\/.*/)[1]
+  
+  // Regex options
+  const options = str.match(/\/.+\/(.*)/)[1]
+  
+  // Compiled regex
+  return new RegExp(main, options)
+}
+
+function isMatched (str, pattern) {
+  return str.match(pattern) !== null;
 }
 
 /**
@@ -352,6 +371,7 @@ function getParameterIdentifier(currentParameters) {
  * Find the first node that is JSXElement, and add attributes and variable declarations
  * @param {t.Node | undefined} element
  * @param {string} idAttributeKey
+ * @param {RegExp} idAttributeValuePattern
  * @param {string} componentAttributeKey
  * @param {string} componentName
  * @param {t.Identifier[]} currentParameters
@@ -360,6 +380,7 @@ function getParameterIdentifier(currentParameters) {
 function addComponentAttribute(
   element,
   idAttributeKey,
+  idAttributeValuePattern,
   componentAttributeKey,
   delimiter,
   componentName,
@@ -374,13 +395,14 @@ function addComponentAttribute(
     // 1. Add component attribute
     const attributes = element.openingElement.attributes;
     const tagName = getContent(element.openingElement.name, delimiter);
-    if (isCapitalised(tagName)) {
+    if (isMatched(tagName, idAttributeValuePattern)) {
       if (tagName.includes(".")) {
         // .Provider wrapper or React.Fragment wrapper
         element.children?.forEach((child) =>
           addComponentAttribute(
             child,
             idAttributeKey,
+            idAttributeValuePattern,
             componentAttributeKey,
             delimiter,
             componentName,
@@ -451,6 +473,7 @@ function addComponentAttribute(
       addComponentAttribute(
         child,
         idAttributeKey,
+        idAttributeValuePattern,
         componentAttributeKey,
         delimiter,
         componentName,
@@ -464,6 +487,7 @@ function addComponentAttribute(
       addComponentAttribute(
         element.expression.consequent,
         idAttributeKey,
+        idAttributeValuePattern,
         componentAttributeKey,
         delimiter,
         componentName,
@@ -473,6 +497,7 @@ function addComponentAttribute(
       addComponentAttribute(
         element.expression.alternate,
         idAttributeKey,
+        idAttributeValuePattern,
         componentAttributeKey,
         delimiter,
         componentName,
@@ -484,6 +509,7 @@ function addComponentAttribute(
       addComponentAttribute(
         element.expression?.right,
         idAttributeKey,
+        idAttributeValuePattern,
         componentAttributeKey,
         delimiter,
         componentName,
