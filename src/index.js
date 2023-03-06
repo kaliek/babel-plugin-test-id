@@ -331,6 +331,11 @@ function getMainFunctionBody(node) {
   if (t.isFunctionExpression(node)) {
     return node.body?.body;
   }
+  if (t.isArrowFunctionExpression(node)) {
+    if (t.isBlockStatement(node.body)) {
+      return node.body?.body;
+    }
+  }
   return null;
 }
 
@@ -347,6 +352,9 @@ function getMainFunctionParameter(node) {
     return getMainFunctionParameter(node.arguments?.[0]);
   }
   if (t.isFunctionExpression(node)) {
+    return node.params;
+  }
+  if (t.isArrowFunctionExpression(node)) {
     return node.params;
   }
   return null;

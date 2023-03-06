@@ -6,7 +6,8 @@ function MyComponent(props) {
   var _internal_id = props?._internal_id;
 }
 const MyComponent2 = (props) => {
-  return <div>{props}</div>;
+  return <div data-component="MyComponent2" data-id={_internal_id} >{props}</div>;
+  var _internal_id = props?._internal_id;
 };
 
 //JSXIdentifier
