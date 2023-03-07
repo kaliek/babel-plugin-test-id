@@ -125,7 +125,8 @@ export default function (
             delimiter,
             functionName,
             currentParams,
-            path.node.body?.body
+            path.node.body?.body,
+            path.node.params
           );
         }
       },
@@ -152,7 +153,8 @@ export default function (
               delimiter,
               variableName,
               currentParameters,
-              body
+              body,
+              currentParameters
             );
           }
         }
@@ -345,7 +347,7 @@ function getMainFunctionBody(node) {
  */
 function getMainFunctionParameter(node) {
   if (!node) {
-    return null;
+    return [];
   }
   if (t.isCallExpression(node)) {
     //  React.memo(React.forwardRef())
@@ -357,7 +359,7 @@ function getMainFunctionParameter(node) {
   if (t.isArrowFunctionExpression(node)) {
     return node.params;
   }
-  return null;
+  return [];
 }
 
 /**
@@ -384,6 +386,7 @@ function getParameterIdentifier(currentParameters) {
  * @param {string} componentName
  * @param {t.Identifier[]} currentParameters
  * @param {t.Node[]} body
+ * @param {t.Node[]} originalParameters to be modified - if it's empty, and _internal_id is added, we need to add _internal_params 
  */
 function addComponentAttribute(
   element,
@@ -393,7 +396,8 @@ function addComponentAttribute(
   delimiter,
   componentName,
   currentParameters,
-  body
+  body,
+  originalParameters
 ) {
   if (!element) {
     return;
@@ -415,7 +419,8 @@ function addComponentAttribute(
             delimiter,
             componentName,
             currentParameters,
-            body
+            body,
+            originalParameters
           )
         );
       } else {
@@ -446,8 +451,11 @@ function addComponentAttribute(
         INTERNAL_ID
       );
       if (newVariableDeclarationArray) {
-        body.push(newVariableDeclarationArray);
+        body.unshift(newVariableDeclarationArray);
       }
+      if (!originalParameters.find(p => t.isIdentifier(p) && p.name === parameterIdentifier.name)) {
+        originalParameters.push(parameterIdentifier);
+      } 
     } else {
       // Find the variable declaration using the same parameter identifier
       const variableDeclaration = variableDeclarationArray.find(
@@ -464,13 +472,16 @@ function addComponentAttribute(
           INTERNAL_ID
         );
         if (newVariableDeclarationArray) {
-          body.push(newVariableDeclarationArray);
+          body.unshift(newVariableDeclarationArray);
         }
+        if (!originalParameters.find(p => t.isIdentifier(p) && p.name === parameterIdentifier.name)) {
+          originalParameters.push(parameterIdentifier);
+        } 
       } else {
         if (t.isVariableDeclaration(variableDeclaration)) {
           const newVariable = createVariable(parameterIdentifier, INTERNAL_ID);
           if (newVariable) {
-            variableDeclaration.declarations.push(newVariable);
+            variableDeclaration.declarations.unshift(newVariable);
           }
         }
       }
@@ -486,7 +497,8 @@ function addComponentAttribute(
         delimiter,
         componentName,
         currentParameters,
-        body
+        body,
+        originalParameters
       )
     );
   } else if (t.isJSXExpressionContainer(element)) {
@@ -500,7 +512,8 @@ function addComponentAttribute(
         delimiter,
         componentName,
         currentParameters,
-        body
+        body,
+        originalParameters,
       );
       addComponentAttribute(
         element.expression.alternate,
@@ -510,7 +523,8 @@ function addComponentAttribute(
         delimiter,
         componentName,
         currentParameters,
-        body
+        body,
+        originalParameters
       );
     } else if (t.isLogicalExpression(element.expression)) {
       // {a && </>}
@@ -522,7 +536,8 @@ function addComponentAttribute(
         delimiter,
         componentName,
         currentParameters,
-        body
+        body,
+        originalParameters
       );
     }
   }
