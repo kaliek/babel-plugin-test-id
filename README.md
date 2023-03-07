@@ -65,7 +65,7 @@ in .babelrc
 
 ```
 "plugins": [
-  ["babel-plugin-test-id", { "idAttributeKey", "data-my-test-id" }]
+  ["babel-plugin-test-id", { "idAttributeKey": "data-my-test-id" }]
   ...
  ]
 ```
