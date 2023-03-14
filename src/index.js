@@ -353,11 +353,21 @@ function getMainFunctionParameter(node) {
     //  React.memo(React.forwardRef())
     return getMainFunctionParameter(node.arguments?.[0]);
   }
-  if (t.isFunctionExpression(node)) {
-    return node.params;
-  }
-  if (t.isArrowFunctionExpression(node)) {
-    return node.params;
+  if (t.isFunctionExpression(node) || t.isArrowFunctionExpression(node)) {
+    const params = [];
+    node.params.forEach(p => {
+      if (t.isIdentifier(p)) {
+        params.push(p);
+      }
+      if (t.isObjectPattern(p)) {
+        p.properties.forEach(prop => {
+          if (t.isObjectProperty(prop) && t.isIdentifier(prop.value)) {
+            params.push(prop.value);
+          }
+        })
+      }
+    });
+    return params.length === 0 ? node.params : params; // So that internal params can be added to the original node.params
   }
   return [];
 }
